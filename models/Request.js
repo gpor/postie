@@ -4,14 +4,28 @@ export default class {
   constructor(url, method, data) {
     this.url = url
     this.method = method
-    this.data = data ? JSON.parse(data) : {}
+    this.data = {}
     this.created = (new Date()).getTime()
     this.lastSent = null
     this.response = null
     this.error = null
     this.loading = true
+    if (data) {
+      try {
+        this.data = JSON.parse(data)
+      }
+      catch(e) {
+        this.error = {
+          message: 'invalid json',
+        }
+      }
+    }
   }
   send() {
+    if (this.error !== null) {
+      this.loading = false
+      return false
+    }
     this.lastSent = (new Date()).getTime()
     this.loading = true
     console.log('this.method', this.method)
