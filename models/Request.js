@@ -1,7 +1,17 @@
 import axios from 'axios'
 
 export default class {
-  constructor(url, method, data) {
+  constructor() {
+    this.url = ''
+    this.method = ''
+    this.data = {}
+    this.created = 0
+    this.lastSent = null
+    this.response = null
+    this.error = null
+    this.loading = false
+  }
+  populate(url, method, data) {
     this.url = url
     this.method = method
     this.data = {}
@@ -21,15 +31,18 @@ export default class {
       }
     }
   }
-  send() {
+  repopulate(data) {
+    for (const pName in data) {
+      this[pName] = data[pName]
+    }
+  }
+  send(callback = null) {
     if (this.error !== null) {
       this.loading = false
       return false
     }
     this.lastSent = (new Date()).getTime()
     this.loading = true
-    console.log('this.method', this.method)
-    console.log('this.data', this.data)
     axios({
       method: this.method,
       url: this.url,
@@ -37,19 +50,23 @@ export default class {
     })
       .then(res => {
         this.loading = false
-        console.log('res', res)
-        this.response = res
+        this.response = res.data
+        if (typeof callback === 'function') {
+          callback()
+        }
       })
       .catch(err => {
         this.loading = false
-        console.log('err', err)
-        this.error = err
+        this.error = err.message
         if ('response' in err) {
-          this.response = err.response
+          this.response = err.response.data
+        }
+        if (typeof callback === 'function') {
+          callback()
         }
       })
   }
-  stringData() {
-    return this.response ? JSON.stringify(this.response.data, null, 2) : ''
+  stringResponseData() {
+    return this.response ? JSON.stringify(this.response, null, 2) : ''
   }
 }
