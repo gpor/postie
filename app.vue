@@ -9,38 +9,61 @@
         class="-request"
       >
         <h2>{{ req.url }}</h2>
-        <pre
-          v-if="req.response"
-          v-html="req.stringData()"
-        ></pre>
+        <div
+          v-if="req.loading"
+        >
+          <h4>Loading</h4>
+        </div>
+        <div
+          v-else
+        >
+          <h3
+            v-if="req.error !== null"
+          >
+            {{ req.error.message }}
+          </h3>
+          <pre
+            v-if="req.response !== null"
+            v-html="req.stringData()"
+          ></pre>
+        </div>
       </div>
     </div>
     <form
       class="new-request"
       @submit.prevent="submit"
     >
-      <input
-        v-model="newUrl"
-        type="text"
-      />
-      <select
-        v-model="newType"
-      >
-        <option
-          value="get"
-          selected
+      <div>
+        <input
+          v-model="newUrl"
+          type="text"
+        />
+        <select
+          v-model="newMethod"
         >
-          get
-        </option>
-        <option value="post">
-          post
-        </option>
-      </select>
-      <button
-        type="submit"
+          <option
+            value="get"
+            selected
+          >
+            get
+          </option>
+          <option value="post">
+            post
+          </option>
+        </select>
+        <button
+          type="submit"
+        >
+          Request
+        </button>
+      </div>
+      <div
+        v-if="['post'].includes(newMethod)"
       >
-        Request
-      </button>
+        <textarea
+          v-model="newData"
+        ></textarea>
+      </div>
     </form>
   </div>
 </template>
@@ -53,16 +76,14 @@ export default {
     return {
       history: [],
       newUrl: 'http://127.0.0.1:5000/api/v1/courses',
-      newType: 'get',
+      newMethod: 'get',
+      newData: '',
     }
-  },
-  created() {
-    console.log('app.vue foobar')
   },
   methods: {
     submit() {
-      const req = reactive(new Request(this.newUrl))
-      req.make()
+      const req = reactive(new Request(this.newUrl, this.newMethod, this.newData))
+      req.send()
       this.history.push(req)
     },
   },
@@ -70,6 +91,11 @@ export default {
 </script>
 
 <style>
+.history {
+}
+.history .-request {
+  margin-bottom: 50px;
+}
 button {
   padding: 0.7em 2em;
   border-radius: 0.3em;
@@ -79,16 +105,23 @@ button {
 }
 .new-request {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  max-width: 1000px;
+}
+.new-request > div {
+  display: flex;
   gap: 12px;
 }
-input[type='text'], select {
+input[type='text'], select, textarea {
   padding: 0.3em 0.5em;
   font-size: 20px;
   border-radius: 0.3em;
   border: 1px solid #ddd;
 }
-input[type='text']:focus, select:focus,
-input[type='text']:focus-visible, select:focus-visible {
+input[type='text']:focus, select:focus, textarea:focus,
+input[type='text']:focus-visible, select:focus-visible, textarea:focus-visible {
   border: 1px solid #aaa;
   outline: none;
 }
@@ -97,5 +130,9 @@ input[type='text'] {
 }
 select {
   width: 100px;
+}
+textarea {
+  width: 100%;
+  height: 200px;
 }
 </style>
