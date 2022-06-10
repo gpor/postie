@@ -1,15 +1,18 @@
 <template>
   <div>
-    <div class="history">
+    <div
+      class="history"
+    >
       <div
-        class="-request"
-        v-for="req in history"
+        v-for="req in history" 
         :key="req.created"
+        class="-request"
       >
         <h2>{{ req.url }}</h2>
         <pre
           v-if="req.response"
-          v-html="req.stringData()"></pre>
+          v-html="req.stringData()"
+        ></pre>
       </div>
     </div>
     <form
@@ -17,18 +20,27 @@
       @submit.prevent="submit"
     >
       <input
-        type="text"
         v-model="newUrl"
+        type="text"
       />
       <select
         v-model="newType"
       >
-        <option value="get" selected>get</option>
-        <option value="post">post</option>
+        <option
+          value="get"
+          selected
+        >
+          get
+        </option>
+        <option value="post">
+          post
+        </option>
       </select>
       <button
         type="submit"
-      >Request</button>
+      >
+        Request
+      </button>
     </form>
   </div>
 </template>
@@ -52,8 +64,8 @@ export default {
       const req = reactive(new Request(this.newUrl))
       req.make()
       this.history.push(req)
-    }
-  }
+    },
+  },
 }
 </script>
 
