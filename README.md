@@ -1,20 +1,16 @@
-# Nuxt 3 Minimal Starter
+# Postie
+### Simple API checker
 
-Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
 
-## Setup
+
+built on [nuxt 3](https://v3.nuxtjs.org).
+
+## Install
 
 Make sure to install the dependencies:
 
 ```bash
-# yarn
-yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install --shamefully-hoist
+npm i
 ```
 
 ## Development Server
@@ -25,18 +21,6 @@ Start the development server on http://localhost:3000
 npm run dev
 ```
 
-## Production
+## CORS for your API server
 
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/guide/deploy/presets) for more information.
+[enable-cors.org](https://enable-cors.org/server.html)
