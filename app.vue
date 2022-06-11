@@ -158,6 +158,7 @@ h3, p, a {
 .history .-request .-title .-actions {
   display: inline-flex;
   gap: 16px;
+  user-select: none;
 }
 .history .-request .-title .-actions a {
   display: inline-block;
@@ -187,6 +188,7 @@ button {
   align-items: stretch;
   gap: 10px;
   max-width: 1000px;
+  height: 500px;
 }
 .new-request > div {
   display: flex;
